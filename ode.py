@@ -142,29 +142,12 @@ def solve_ode_rk45(f, t_span, y0, p, atol=1e-9, rtol=1e-9, h_init=0.01):
 
     return np.array(t_list), np.array(y_list)
 
-# Runge Kutta 45 Example #
-# tolerance = 1e-9
-# for name, y_test in initial_conditions.items():
-#     print(f"Test with Runge Kutta 45: {name}")
-#     n_body.calls = 0
-#     start_t = time.time()
-#     t_s, y = solve_ode_rk45(n_body, t_span, y_test, p, atol=tolerance, rtol=tolerance)
-#     end_t = time.time()
-
-#     E = total_energy(y, p)
-#     E0 = np.mean(E[:5])
-#     pct = np.abs((E - E0) / E0)
-#     bad = np.where(pct > 0.005)[0]
-#     deviation_time = round(t_s[bad[0]], 2) if len(bad) > 0 else t_s[-1]
-
-#     new_row = pd.DataFrame([{"Algorithm": "Runge Kutta 45", "Initial Conditions": name,
-#         "Run Time (s)": end_t - start_t, "Time to instability (s)": deviation_time,
-#         "Function Calls": n_body.calls, "dt": "N/A", "Tolerances": tolerance}])
-#     results_table = pd.concat([results_table, new_row])
-
-# results_table
 
 def solve_ode(f, t_span, y0, method, p, first_step=0.01):
+
+    # If method is rk45, use the adaptive solver instead
+    if method == 'rk45' or method == solve_ode_rk45:
+        return solve_ode_rk45(f, t_span, y0, p, h_init=first_step)
 
     dt = first_step
     t_start, t_end = t_span
